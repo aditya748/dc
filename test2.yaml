@@ -72,4 +72,3 @@ volumes:
     driver: local
   redis-cluster_data-5:
     driver: local
-{"mode":"full","isActive":false}
