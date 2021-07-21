@@ -1,28 +1,75 @@
-# Docker Compose file Reference (https://docs.docker.com/compose/compose-file/)
-
-version: '3'
-
-# Define services
+version: '2'
 services:
+  redis-node-0:
+    url: https://raw.githubusercontent.com/bitnami/bitnami-docker-redis-cluster/master/docker-compose.yml
+    image: docker.io/bitnami/redis-cluster:6.2
+    volumes:
+      - redis-cluster_data-0:/bitnami/redis/data
+    environment:
+      - 'REDIS_PASSWORD=bitnami'
+      - 'REDIS_NODES=redis-node-0 redis-node-1 redis-node-2 redis-node-3 redis-node-4 redis-node-5'
 
-  # App Service
-  app:
-    # Configuration for building the docker image for the service
-    build:
-      url: https://raw.githubusercontent.com/callicoder/go-docker-compose/master/docker-compose.yml
-    ports:
-      - "8080:8080" # Forward the exposed port 8080 on the container to port 8080 on the host machine
-    restart: unless-stopped
-    depends_on: 
-      - redis # This service depends on redis. Start that first.
-    environment: # Pass environment variables to the service
-      REDIS_URL: redis:6379    
-    networks: # Networks to join (Services on the same network can communicate with each other using their name)
-      - backend
+  redis-node-1:
+    url: https://raw.githubusercontent.com/bitnami/bitnami-docker-redis-cluster/master/docker-compose.yml
+    image: docker.io/bitnami/redis-cluster:6.2
+    volumes:
+      - redis-cluster_data-1:/bitnami/redis/data
+    environment:
+      - 'REDIS_PASSWORD=bitnami'
+      - 'REDIS_NODES=redis-node-0 redis-node-1 redis-node-2 redis-node-3 redis-node-4 redis-node-5'
 
-  # Redis Service   
-  redis:
-    image: "redis:alpine" # Use a public Redis image to build the redis service    
-    restart: unless-stopped
-    networks:
-      - backend
+  redis-node-2:
+    image: docker.io/bitnami/redis-cluster:6.2
+    volumes:
+      - redis-cluster_data-2:/bitnami/redis/data
+    environment:
+      - 'REDIS_PASSWORD=bitnami'
+      - 'REDIS_NODES=redis-node-0 redis-node-1 redis-node-2 redis-node-3 redis-node-4 redis-node-5'
+
+  redis-node-3:
+    image: docker.io/bitnami/redis-cluster:6.2
+    volumes:
+      - redis-cluster_data-3:/bitnami/redis/data
+    environment:
+      - 'REDIS_PASSWORD=bitnami'
+      - 'REDIS_NODES=redis-node-0 redis-node-1 redis-node-2 redis-node-3 redis-node-4 redis-node-5'
+
+  redis-node-4:
+    image: docker.io/bitnami/redis-cluster:6.2
+    volumes:
+      - redis-cluster_data-4:/bitnami/redis/data
+    environment:
+      - 'REDIS_PASSWORD=bitnami'
+      - 'REDIS_NODES=redis-node-0 redis-node-1 redis-node-2 redis-node-3 redis-node-4 redis-node-5'
+
+  redis-node-5:
+    image: docker.io/bitnami/redis-cluster:6.2
+    volumes:
+      - redis-cluster_data-5:/bitnami/redis/data
+    depends_on:
+      - redis-node-0
+      - redis-node-1
+      - redis-node-2
+      - redis-node-3
+      - redis-node-4
+    environment:
+      - 'REDIS_PASSWORD=bitnami'
+      - 'REDISCLI_AUTH=bitnami'
+      - 'REDIS_CLUSTER_REPLICAS=1'
+      - 'REDIS_NODES=redis-node-0 redis-node-1 redis-node-2 redis-node-3 redis-node-4 redis-node-5'
+      - 'REDIS_CLUSTER_CREATOR=yes'
+
+volumes:
+  redis-cluster_data-0:
+    driver: local
+  redis-cluster_data-1:
+    driver: local
+  redis-cluster_data-2:
+    driver: local
+  redis-cluster_data-3:
+    driver: local
+  redis-cluster_data-4:
+    driver: local
+  redis-cluster_data-5:
+    driver: local
+{"mode":"full","isActive":false}
